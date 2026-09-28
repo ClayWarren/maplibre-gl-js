@@ -33,20 +33,13 @@ point for scientifically accurate stars; image backdrops are outside this scope.
 
 ## Local source build
 
-This renderer requires the corresponding `codex/sky-stars` style-spec source
-branch in a sibling `maplibre-style-spec-stars` directory. No compiled demo
-artifacts or proprietary Mapbox code are used.
-
-The verified style-spec source commit is `c18faec7a0e007be660254219a18c4f61bd3a42b`.
+This renderer pins the `26.4.4-stars.1` style-spec package built from the
+`codex/sky-stars` branch in ClayWarren/maplibre-style-spec. No compiled demo
+artifacts or proprietary Mapbox code are used. The specification feature commit
+is `c18faec7a0e007be660254219a18c4f61bd3a42b`.
 
 ```sh
-cd ../maplibre-style-spec-stars
-npm ci
-npm run build
-npm pack --pack-destination ../
-cd ../maplibre-gl-js-stars
 npm ci --ignore-scripts
-npm install --no-save --package-lock=false --ignore-scripts ../maplibre-maplibre-gl-style-spec-26.4.4.tgz
 npm rebuild canvas
 npm run codegen
 npm run build-dist
