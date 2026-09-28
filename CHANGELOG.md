@@ -1,5 +1,6 @@
 ## main
 ### ✨ Features and improvements
+- Add opt-in decorative stars and a configurable backdrop behind the sky (style-spec proposal #1889).
 - Speed up symbol rendering when the set of visible tiles changes, by rewriting the opacity buffers only of the symbol buckets whose labels actually changed instead of every bucket of every symbol layer ([#8434](https://github.com/maplibre/maplibre-gl-js/pull/8434)) (by [@cherenkov](https://github.com/cherenkov))
 - _...Add new stuff here..._
 

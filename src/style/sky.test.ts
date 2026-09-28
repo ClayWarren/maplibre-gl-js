@@ -7,6 +7,55 @@ import type {TransitionParameters} from './properties.ts';
 
 const spec = styleSpec.sky;
 
+test('stars are opt-in and backdrop defaults to transparent', () => {
+    const sky = new Sky({}, {});
+    expect(sky.properties.get('star-opacity')).toBe(0);
+    expect(sky.properties.get('backdrop-color').a).toBe(0);
+});
+
+test('stars and backdrop read global state', () => {
+    const sky = new Sky({
+        'star-opacity': ['number', ['global-state', 'opacity'], 0],
+        'backdrop-color': ['to-color', ['global-state', 'backdrop']]
+    }, {opacity: 0.7, backdrop: 'red'});
+    expect(sky.properties.get('star-opacity')).toBe(0.7);
+    expect(sky.properties.get('backdrop-color').r).toBe(1);
+});
+
+test('star opacity and backdrop evaluate zoom expressions', () => {
+    const sky = new Sky({
+        'star-opacity': ['interpolate', ['linear'], ['zoom'], 0, 1, 10, 0],
+        'backdrop-color': ['interpolate', ['linear'], ['zoom'], 0, 'black', 10, 'white']
+    }, {});
+    sky.recalculate({zoom: 5, zoomHistory: {}} as EvaluationParameters);
+    expect(sky.properties.get('star-opacity')).toBe(0.5);
+    expect(sky.properties.get('backdrop-color').r).toBeCloseTo(0.5);
+});
+
+test('stars and backdrop transition and reset when omitted', () => {
+    const sky = new Sky({'star-opacity': 0, 'backdrop-color': 'black'}, {});
+    sky.setSky({'star-opacity': 1, 'backdrop-color': 'white'});
+    sky.updateTransitions({now: 0, transition: {duration: 1000, delay: 0}});
+    sky.recalculate({zoom: 0, now: 500, zoomHistory: {}} as EvaluationParameters);
+    expect(sky.properties.get('star-opacity')).toBeCloseTo(0.5);
+    expect(sky.properties.get('backdrop-color').r).toBeCloseTo(0.5);
+    sky.setSky({});
+    sky.updateTransitions({now: 2000, transition: {duration: 0, delay: 0}});
+    sky.recalculate({zoom: 0, now: 2000, zoomHistory: {}} as EvaluationParameters);
+    expect(sky.properties.get('star-opacity')).toBe(0);
+    expect(sky.properties.get('backdrop-color').a).toBe(0);
+    expect(sky.getSky()).toEqual({});
+});
+
+test('removing sky disables stars and clears the backdrop', () => {
+    const sky = new Sky({'star-opacity': 1, 'backdrop-color': 'red'}, {});
+    sky.setSky(undefined);
+    sky.updateTransitions({now: 0, transition: {duration: 0, delay: 0}});
+    sky.recalculate({zoom: 0, now: 1, zoomHistory: {}} as EvaluationParameters);
+    expect(sky.properties.get('star-opacity')).toBe(0);
+    expect(sky.properties.get('backdrop-color').a).toBe(0);
+});
+
 test('Sky with defaults', () => {
     const sky = new Sky({}, {});
     sky.recalculate({zoom: 0, zoomHistory: {}} as EvaluationParameters);

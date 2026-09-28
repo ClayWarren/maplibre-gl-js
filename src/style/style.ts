@@ -1773,22 +1773,7 @@ export class Style extends Evented<MapEventType> {
 
         const sky = this.getSky();
 
-        let update = false;
-        if (!skyOptions && !sky) return;
-
-        if (skyOptions && !sky) {
-            update = true;
-        } else if (!skyOptions && sky) {
-            update = true;
-        } else {
-            for (const key in skyOptions) {
-                if (!deepEqual(skyOptions[key], sky[key])) {
-                    update = true;
-                    break;
-                }
-            }
-        }
-        if (!update) return;
+        if (deepEqual(skyOptions, sky)) return;
 
         const parameters = {
             now: now(),
@@ -1824,6 +1809,7 @@ export class Style extends Evented<MapEventType> {
     }
 
     _remove(mapRemoved: boolean = true): void {
+        this.sky?.destroy();
         if (this._frameRequest) {
             this._frameRequest.abort();
             this._frameRequest = null;
@@ -2145,6 +2131,7 @@ export class Style extends Evented<MapEventType> {
      * Destroys all internal resources of the style (sources, images, layers, etc.)
      */
     destroy(): void {
+        this.sky?.destroy();
         // cancel any pending requests
         if (this._frameRequest) {
             this._frameRequest.abort();

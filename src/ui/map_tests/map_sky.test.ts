@@ -8,6 +8,14 @@ beforeEach(() => {
 });
 
 describe('setSky', () => {
+    test('removing stars from the sky replaces the serialized specification', async () => {
+        const map = createMap();
+        await map.once('style.load');
+        map.setSky({'star-opacity': 1, 'backdrop-color': 'black'});
+        map.setSky({});
+        expect(map.getSky()).toEqual({});
+        map.remove();
+    });
     test('calls style setSky when set', () => {
         const map = createMap();
         const spy = vi.fn();

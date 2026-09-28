@@ -16,6 +16,7 @@ export class Sky extends Evented {
      */
     mesh: Mesh | undefined;
     atmosphereMesh: Mesh | undefined;
+    starsMesh: Mesh | undefined;
     _transitionable: Transitionable<SkyProps>;
     _transitioning: Transitioning<SkyProps>;
 
@@ -35,6 +36,8 @@ export class Sky extends Evented {
         if (this._validate(validateStyle.sky, sky, options)) return false;
 
         sky ||= {
+            'star-opacity': 0,
+            'backdrop-color': 'transparent',
             'sky-color': 'transparent',
             'horizon-color': 'transparent',
             'fog-color': 'transparent',
@@ -42,12 +45,25 @@ export class Sky extends Evented {
             'atmosphere-blend': 0,
         };
 
+        for (const key of Object.keys(this.getSky())) {
+            if (!(key in sky)) this._transitionable.setValues({[key]: undefined});
+        }
         this._transitionable.setValues(sky);
         return true;
     }
 
     getSky(): SkySpecification {
         return this._transitionable.serialize();
+    }
+
+    /** Releases GPU meshes on style removal or context replacement. */
+    destroy(): void {
+        this.mesh?.destroy();
+        this.atmosphereMesh?.destroy();
+        this.starsMesh?.destroy();
+        this.mesh = undefined;
+        this.atmosphereMesh = undefined;
+        this.starsMesh = undefined;
     }
 
     updateTransitions(parameters: TransitionParameters): void {

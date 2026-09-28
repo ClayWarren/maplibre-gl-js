@@ -13,6 +13,7 @@ import {backgroundUniforms, backgroundPatternUniforms, type BackgroundUniformsTy
 import {terrainUniforms, terrainDepthUniforms, type TerrainUniformsType, type TerrainDepthUniformsType} from './terrain_program.ts';
 import {atmosphereUniforms, type atmosphereUniformsType} from './atmosphere_program.ts';
 import {skyUniforms, type SkyUniformsType} from './sky_program.ts';
+import {starsUniforms, type StarsUniformsType} from './stars_program.ts';
 
 import type {Context} from '../context.ts';
 import type {UniformLocations} from '../uniform_binding.ts';
@@ -55,6 +56,7 @@ export const programUniforms: {
     terrainDepth: (context: Context, locations: UniformLocations) => TerrainDepthUniformsType;
     atmosphere: (context: Context, locations: UniformLocations) => atmosphereUniformsType;
     sky: (context: Context, locations: UniformLocations) => SkyUniformsType;
+    stars: (context: Context, locations: UniformLocations) => StarsUniformsType;
 } = {
     fillExtrusion: fillExtrusionUniforms,
     fillExtrusionPattern: fillExtrusionPatternUniforms,
@@ -88,5 +90,6 @@ export const programUniforms: {
     terrain: terrainUniforms,
     terrainDepth: terrainDepthUniforms,
     atmosphere: atmosphereUniforms,
-    sky: skyUniforms
+    sky: skyUniforms,
+    stars: starsUniforms
 };

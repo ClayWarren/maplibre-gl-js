@@ -10,6 +10,7 @@ import {getAtmosphereAltitudeBlend, getGlobeCenterInViewSpace, getGlobeRadiusPix
 import {Mesh} from '../../render/mesh.ts';
 import {mat4, vec3} from 'gl-matrix';
 import {ColorMode} from '../color_mode.ts';
+import {drawStars} from './draw_stars.ts';
 
 import type {Sky} from '../../style/sky.ts';
 import type {Light} from '../../style/light.ts';
@@ -41,6 +42,7 @@ function getMesh(context: Context, sky: Sky): Mesh {
 }
 
 export function drawSky(painter: Painter, sky: Sky): void {
+    drawStars(painter, sky);
     const context = painter.context;
     const gl = context.gl;
 

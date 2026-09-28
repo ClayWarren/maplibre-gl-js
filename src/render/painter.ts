@@ -573,7 +573,7 @@ export class Painter {
         this.context.bindFramebuffer.set(null);
 
         // Clear buffers in preparation for drawing to the main framebuffer
-        this.context.clear({color: options.showOverdrawInspector ? Color.black : Color.transparent, depth: 1});
+        this.context.clear({color: options.showOverdrawInspector ? Color.black : this.style.sky?.properties.get('backdrop-color') ?? Color.transparent, depth: 1});
         this.clearStencil();
 
         // draw sky first to not overwrite symbols
